@@ -3,10 +3,11 @@ import PIL
 import pygame
 
 from myrpg.base_settings import *
+from myrpg.entity import Entity
 from myrpg.file_loader import FilesLoader
 
-class MyRPGPlayer(pygame.sprite.Sprite):
-    def __init__(self, pos, groups, obstacle_sprites, attack_func, destroy_weapon):
+class MyRPGPlayer(Entity):
+    def __init__(self, pos, groups, obstacle_sprites, attack_func, destroy_weapon, create_ability):
         super().__init__(groups)
         self.image = pygame.image.load('graphics\\player\\player_down.png').convert_alpha()
         self.rect = self.image.get_rect(topleft=pos)
@@ -15,22 +16,40 @@ class MyRPGPlayer(pygame.sprite.Sprite):
         self.get_player_assets()
 
         self.status = 'down'
-        self.frame_index = 0
-        self.animation_speed = 0.10
-
-        self.direction = pygame.math.Vector2()
-        self.speed = 4
-
+        
+        self.obstacle_sprites = obstacle_sprites
+        
         self.attacking = False
         self.attack_cooldown = 400
         self.attack_timer = 0
         self.attack_func = attack_func
         self.destroy_weapon = destroy_weapon
-
-        self.weapon_index = 1
+        self.weapon_index = 0
         self.weapon = list(WEAPON_DATA.keys())[self.weapon_index]
         self.weapon_entry = WEAPON_DATA[list(WEAPON_DATA.keys())[self.weapon_index]]
-        self.obstacle_sprites = obstacle_sprites
+        self.can_switch_weapons = True
+        self.weapon_switch_time = None
+        self.switch_cooldown = 200
+
+        self.create_ability = create_ability
+        self.ability_index = 0
+        self.ability = list(ABILITY_DATA.keys())[self.ability_index]
+        self.ability_entry = ABILITY_DATA[list(ABILITY_DATA.keys())[self.ability_index]]
+        self.can_switch_abilities = True
+        self.ability_switch_time = None
+        
+        self.stats = {
+            'MaxHealth': 100,
+            'MaxEnergy': 100,
+            'Attack': 10,
+            'Magic': 4,
+            'Speed': 3 
+        }
+
+        self.health = self.stats['MaxHealth']
+        self.energy = self.stats['MaxEnergy']
+        self.xp = 123
+        self.speed = self.stats['Speed']
 
     def get_status(self):
         if self.direction.x == 0 and self.direction.y == 0:
@@ -109,34 +128,26 @@ class MyRPGPlayer(pygame.sprite.Sprite):
             if keys[pygame.K_x]:
                 self.attacking = True
                 self.attack_timer = pygame.time.get_ticks()
-                print('magic!')
+                net_ability_damage = self.ability_entry['Strength'] + self.stats['Magic']
+                self.create_ability(self.ability_entry['Name'], net_ability_damage, self.ability_entry['Cost'])
 
-    def collision(self, direction):
-        if direction == 'horizontal':
-            for sprite in self.obstacle_sprites:
-                if sprite.hitbox.colliderect(self.hitbox):
-                    if self.direction.x > 0:
-                        self.hitbox.right = sprite.hitbox.left
-                    if self.direction.x < 0:
-                        self.hitbox.left = sprite.hitbox.right
-        
-        if direction == 'vertical':
-            for sprite in self.obstacle_sprites:
-                if sprite.hitbox.colliderect(self.hitbox):
-                    if self.direction.y > 0:
-                        self.hitbox.bottom = sprite.hitbox.top
-                    if self.direction.y < 0:
-                        self.hitbox.top = sprite.hitbox.bottom
+            if keys[pygame.K_a] and self.can_switch_weapons:
+                self.can_switch_weapons = False
+                self.weapon_switch_time = pygame.time.get_ticks()
+                self.weapon_index += 1
+                if self.weapon_index >= len(WEAPON_DATA.keys()):
+                    self.weapon_index = 0
+                self.weapon = list(WEAPON_DATA.keys())[self.weapon_index]
+                self.weapon_entry = WEAPON_DATA[list(WEAPON_DATA.keys())[self.weapon_index]]
 
-    def move(self, speed):
-        if self.direction.magnitude() != 0:
-            self.direction = self.direction.normalize()
-
-        self.hitbox.x += self.direction.x * speed
-        self.collision('horizontal')        
-        self.hitbox.y += self.direction.y * speed
-        self.collision('vertical')
-        self.rect.center = self.hitbox.center
+            if keys[pygame.K_s] and self.can_switch_abilities:
+                self.can_switch_abilities = False
+                self.ability_switch_time = pygame.time.get_ticks()
+                self.ability_index += 1
+                if self.ability_index >= len(ABILITY_DATA.keys()):
+                    self.ability_index = 0
+                self.ability = list(ABILITY_DATA.keys())[self.ability_index]
+                self.ability_entry = ABILITY_DATA[list(ABILITY_DATA.keys())[self.ability_index]]
 
     def update(self):
         self.input()
@@ -151,6 +162,14 @@ class MyRPGPlayer(pygame.sprite.Sprite):
             if current_time - self.attack_timer >= self.attack_cooldown:
                 self.attacking = False
                 self.destroy_weapon()
+
+        if not self.can_switch_weapons:
+            if current_time - self.weapon_switch_time >= self.switch_cooldown:
+                self.can_switch_weapons = True
+
+        if not self.can_switch_abilities:
+            if current_time - self.ability_switch_time >= self.switch_cooldown:
+                self.can_switch_abilities = True
                 
 
         

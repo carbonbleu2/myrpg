@@ -1,11 +1,13 @@
 import random
 import pygame
 
-from myrpg.base_settings import TILE_SIZE
+from myrpg.base_settings import TILE_SIZE, ENEMY_DATA
+from myrpg.enemy import Enemy
 from myrpg.file_loader import FilesLoader
 from myrpg.tile import Tile
 from myrpg.player import MyRPGPlayer
 from myrpg.csv_utils import CSVUtils
+from myrpg.ui import UI
 from myrpg.weapon import Weapon
 
 class Level:
@@ -17,19 +19,22 @@ class Level:
 
         self.current_attack = None
 
-
         self.create_map()
+
+        self.ui = UI()
 
     def create_map(self):
         layouts = {
             'boundary': CSVUtils.import_map('maps\\Map1._FloorBlocks.csv'),
             'grass': CSVUtils.import_map('maps\\Map1._Grass.csv'),
             'object': CSVUtils.import_map('maps\\Map1._Objects.csv'),
+            'entity': CSVUtils.import_map('maps\\Map1._Entities.csv')
         }
 
         graphics = {
             'grass': FilesLoader.import_images('graphics\\grass'),
-            'objects': FilesLoader.import_images('graphics\\objects')
+            'objects': FilesLoader.import_images('graphics\\objects'),
+            'entities': FilesLoader.import_images('graphics\\enemies')
         }
 
         for style, layout in layouts.items():
@@ -46,18 +51,25 @@ class Level:
                         if style == 'object':
                             surface = graphics['objects'][int(col)]
                             Tile((x, y), [self.visible_sprites, self.obstacle_sprites], 'object', surface)
-        #         if col == 'r':
-        #             Tile((x, y), [self.visible_sprites, self.obstacle_sprites])
-        #         if col == 'p':
-        #             self.player = MyRPGPlayer((x, y), [self.visible_sprites], self.obstacle_sprites)
-        self.player = MyRPGPlayer((736, 800), [self.visible_sprites], self.obstacle_sprites, self.create_attack, self.destroy_weapon)
-
+                        if style == 'entity':
+                            if col == '8':
+                                self.player = MyRPGPlayer((736, 800), [self.visible_sprites], 
+                                    self.obstacle_sprites, 
+                                    self.create_attack, self.destroy_weapon,
+                                    self.create_ability)
+                            elif col == '0':
+                                Enemy('Blobble', (x, y), [self.visible_sprites], self.obstacle_sprites)
+        
     def run(self):
         self.visible_sprites.custom_draw(self.player)
         self.visible_sprites.update()
+        self.ui.display(self.player)
 
     def create_attack(self):
         self.current_attack = Weapon(self.player, [self.visible_sprites])
+
+    def create_ability(self, name, strength, cost):
+        print(f"{name}, {strength}, {cost}")
 
     def destroy_weapon(self):
         if self.current_attack:

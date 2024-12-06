@@ -1,5 +1,6 @@
 import pygame
 
+from myrpg.abilities.ability_factory import AbilityFactory
 from myrpg.base_settings import *
 from myrpg.player import MyRPGPlayer
 
@@ -16,8 +17,8 @@ class UI:
             self.weapon_surfaces[weapon] = pygame.image.load(WEAPON_DATA[weapon]['Graphic']).convert_alpha()
 
         self.ability_surfaces = {}
-        for ability in ABILITY_DATA:
-            self.ability_surfaces[ability] = pygame.image.load(ABILITY_DATA[ability]['Graphic']).convert_alpha()
+        for ability in AbilityFactory.ABILITIES:
+            self.ability_surfaces[ability] = pygame.image.load(AbilityFactory.get_ability_graphic(ability)).convert_alpha()
 
     def show_bar(self, current_amount, max_amount, bg_rect, colour):
         pygame.draw.rect(self.display_surface, UI_BG_COLOUR, bg_rect)
@@ -56,7 +57,7 @@ class UI:
 
     def show_ability_overlay(self, ability_entry, has_switched_abilities):
         bg_rect = self.show_selection_box(60, 550, has_switched_abilities)
-        ability_surface = self.ability_surfaces[ability_entry["CodeName"]]
+        ability_surface = self.ability_surfaces[ability_entry.codename]
         ability_rect = ability_surface.get_rect(center=bg_rect.center)
         self.display_surface.blit(ability_surface, ability_rect)
 

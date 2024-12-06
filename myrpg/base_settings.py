@@ -31,7 +31,7 @@ WEAPON_DATA = {
     },
     "WoodenLance": {
         "Name": "Wooden Lance",
-        "Cooldown": 400,
+        "Cooldown": 200,
         "Damage": 18,
         "Graphic": "graphics\\weapons\\piercers\\WoodenLance.png",
         "Category": "piercers",
@@ -52,7 +52,7 @@ ABILITY_DATA = {
         "Name": "Fireball",
         "Strength": 5,
         "Cost": 15,
-        "Graphic": "graphics\\spells\\flame\\Fireball.png",
+        "Graphic": "graphics\\abilities\\flame\\Fireball.png",
         "Category": "flame",
         "CodeName": "Fireball"
     },
@@ -60,7 +60,7 @@ ABILITY_DATA = {
         "Name": "First Aid",
         "Strength": 20,
         "Cost": 10,
-        "Graphic": "graphics\\spells\\support\\FirstAid.png",
+        "Graphic": "graphics\\abilities\\support\\FirstAid.png",
         "Category": "support",
         "CodeName": "FirstAid"
     },
@@ -68,15 +68,20 @@ ABILITY_DATA = {
 
 ENEMY_DATA = {
     "Blobble": {
+        "EnemyID": 0,
         "Name": "Blobble",
         "CodeName": "Blobble",
-        "MaxHealth": 20,
+        "MaxHealth": 100,
         "ExpGain": 50,
         "Damage": 20,
-        "AttackType": "Slash",
-        "Speed": 3,
-        "Resistance": 2,
-        "AttackRadius": 80,
-        "NoticeRadius": 200
+        "AttackType": "Bump",
+        "Speed": 2,
+        "Resistance": 5,
+        "AttackRadius": 10,
+        "NoticeRadius": 100
     }
 }
+
+ENEMY_ID = {
+    0: "Blobble"
+} 

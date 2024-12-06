@@ -5,6 +5,7 @@ from myrpg.player import MyRPGPlayer
 class Weapon(pygame.sprite.Sprite):
     def __init__(self, player: MyRPGPlayer, groups):
         super().__init__(groups)
+        self.sprite_type = 'weapon'
         player_dir = player.status.split('_')[0]
         
         player_weapon = player.weapon_entry

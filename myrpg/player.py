@@ -2,6 +2,7 @@ import os
 import PIL
 import pygame
 
+from myrpg.abilities.ability_factory import AbilityFactory
 from myrpg.base_settings import *
 from myrpg.entity import Entity
 from myrpg.file_loader import FilesLoader
@@ -29,27 +30,34 @@ class MyRPGPlayer(Entity):
         self.weapon_entry = WEAPON_DATA[list(WEAPON_DATA.keys())[self.weapon_index]]
         self.can_switch_weapons = True
         self.weapon_switch_time = None
-        self.switch_cooldown = 200
+        self.switch_cooldown = 500
 
         self.create_ability = create_ability
         self.ability_index = 0
-        self.ability = list(ABILITY_DATA.keys())[self.ability_index]
-        self.ability_entry = ABILITY_DATA[list(ABILITY_DATA.keys())[self.ability_index]]
+        self.ability_entry = AbilityFactory.get_ability_by_index(self.ability_index)
+        self.ability = self.ability_entry.name
         self.can_switch_abilities = True
         self.ability_switch_time = None
         
         self.stats = {
             'MaxHealth': 100,
             'MaxEnergy': 100,
-            'Attack': 10,
-            'Magic': 4,
-            'Speed': 3 
+            'Strength': 10,
+            'Speed': 3,
+            'Intelligence': 4
         }
 
         self.health = self.stats['MaxHealth']
         self.energy = self.stats['MaxEnergy']
         self.xp = 123
         self.speed = self.stats['Speed']
+
+        self.vulnerable = True
+        self.hurt_time = 0
+        self.invincibility_duration = 500
+
+        self.health_recovery_rate = 0.0001
+        self.energy_recovery_rate = 0.001
 
     def get_status(self):
         if self.direction.x == 0 and self.direction.y == 0:
@@ -76,6 +84,12 @@ class MyRPGPlayer(Entity):
 
         self.image = animation[int(self.frame_index)]
         self.rect = self.image.get_rect(center = self.hitbox.center)
+
+        if not self.vulnerable:
+            alpha = self.wave_value()
+            self.image.set_alpha(alpha)
+        else:
+            self.image.set_alpha(255)
 
     def get_player_assets(self):
         character_path = 'graphics\\player'
@@ -128,8 +142,8 @@ class MyRPGPlayer(Entity):
             if keys[pygame.K_x]:
                 self.attacking = True
                 self.attack_timer = pygame.time.get_ticks()
-                net_ability_damage = self.ability_entry['Strength'] + self.stats['Magic']
-                self.create_ability(self.ability_entry['Name'], net_ability_damage, self.ability_entry['Cost'])
+                net_ability_damage = self.ability_entry.strength + self.stats['Intelligence']
+                self.create_ability(self.ability_entry, net_ability_damage, self.ability_entry.cost)
 
             if keys[pygame.K_a] and self.can_switch_weapons:
                 self.can_switch_weapons = False
@@ -144,10 +158,10 @@ class MyRPGPlayer(Entity):
                 self.can_switch_abilities = False
                 self.ability_switch_time = pygame.time.get_ticks()
                 self.ability_index += 1
-                if self.ability_index >= len(ABILITY_DATA.keys()):
+                if self.ability_index >= AbilityFactory.get_ability_count():
                     self.ability_index = 0
-                self.ability = list(ABILITY_DATA.keys())[self.ability_index]
-                self.ability_entry = ABILITY_DATA[list(ABILITY_DATA.keys())[self.ability_index]]
+                self.ability_entry = AbilityFactory.get_ability_by_index(self.ability_index)
+                self.ability = self.ability_entry.name
 
     def update(self):
         self.input()
@@ -155,11 +169,13 @@ class MyRPGPlayer(Entity):
         self.get_status()
         self.animate()
         self.move(self.speed)
+        self.recover_health()
+        self.recover_energy()
 
     def cooldowns(self):
         current_time = pygame.time.get_ticks()
         if self.attacking:
-            if current_time - self.attack_timer >= self.attack_cooldown:
+            if current_time - self.attack_timer >= self.attack_cooldown + self.weapon_entry['Cooldown']:
                 self.attacking = False
                 self.destroy_weapon()
 
@@ -170,6 +186,22 @@ class MyRPGPlayer(Entity):
         if not self.can_switch_abilities:
             if current_time - self.ability_switch_time >= self.switch_cooldown:
                 self.can_switch_abilities = True
-                
+
+        if not self.vulnerable:
+            if current_time - self.hurt_time >= self.invincibility_duration:
+                self.vulnerable = True
+
+    def get_net_damage(self):
+        return self.stats['Strength'] + self.weapon_entry['Damage']
+    
+    def recover_energy(self):
+        if self.energy < self.stats['MaxEnergy']:
+            self.energy += self.energy_recovery_rate * self.stats['Intelligence']
+        self.energy = min(self.energy, self.stats['MaxEnergy'])        
+
+    def recover_health(self):
+        if self.health < self.stats['MaxHealth']:
+            self.health += self.health_recovery_rate * self.stats['Strength']
+        self.health = min(self.health, self.stats['MaxHealth'])        
 
         

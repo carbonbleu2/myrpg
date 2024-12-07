@@ -11,7 +11,6 @@ class MyRPG:
         self.screen = pygame.display.set_mode((GAME_WIDTH, GAME_HEIGHT))
         pygame.display.set_caption("MyRPG")
         self.clock = pygame.time.Clock()
-
         self.level = Level()
 
     def run(self):
@@ -20,6 +19,10 @@ class MyRPG:
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_r:
+                        self.level = Level()
+
 
             self.screen.fill("grey")
             self.level.run()

@@ -1,5 +1,6 @@
 from myrpg.abilities.flame import *
 from myrpg.abilities.support import *
+from myrpg.abilities.warrior import *
 
 class AbilityFactory:
     ABILITIES = {
@@ -7,7 +8,10 @@ class AbilityFactory:
         'Fireball': Fireball(None),
 
         # Support abilities
-        'FirstAid': FirstAid(None)
+        'FirstAid': FirstAid(None),
+
+        # Warrior abilities:
+        'WarriorsResolve': WarriorsResolve(None)
     }
 
     @staticmethod

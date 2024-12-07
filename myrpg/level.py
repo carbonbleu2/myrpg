@@ -13,6 +13,8 @@ from myrpg.ui import UI
 from myrpg.weapon import Weapon
 
 class Level:
+    timers = {}
+
     def __init__(self):
         self.display_surface = pygame.display.get_surface()
 
@@ -76,6 +78,10 @@ class Level:
         self.visible_sprites.update_enemy(self.player)
         self.player_attack()
         self.ui.display(self.player)
+        for k, v in list(self.timers.items()):
+            v.update()
+            if not v.active:
+                del self.timers[k]
 
     def create_attack(self):
         self.current_attack = self.player.weapon(self.player, [self.visible_sprites, self.attack_sprites])
@@ -116,6 +122,7 @@ class Level:
 
     def damage_player(self, amount, attack_type):
         if self.player.vulnerable:
+            amount -= self.player.defense
             self.player.health = 0 if self.player.health - amount <= 0 else self.player.health - amount
             self.player.vulnerable = False
             self.player.hurt_time = pygame.time.get_ticks()

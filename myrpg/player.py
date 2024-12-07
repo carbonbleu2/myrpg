@@ -1,3 +1,4 @@
+import math
 import os
 import PIL
 import pygame
@@ -11,7 +12,7 @@ from myrpg.weapons.weapon_factory import WeaponFactory
 class MyRPGPlayer(Entity):
     def __init__(self, pos, groups, obstacle_sprites, attack_func, destroy_weapon, create_ability):
         super().__init__(groups)
-        self.image = pygame.image.load('graphics\\player\\player_down.png').convert_alpha()
+        self.image = pygame.image.load(os.path.join('graphics', 'player', 'player_down.png')).convert_alpha()
         self.rect = self.image.get_rect(topleft=pos)
         self.hitbox = self.rect.inflate(0, -15)
 
@@ -54,6 +55,7 @@ class MyRPGPlayer(Entity):
         self.total_xp = 0
         self.xp_for_next_level = 15
 
+        self.defense = int(math.ceil(0.2 * self.stats['Strength']))
 
         self.speed = self.stats['Speed']
 
@@ -62,7 +64,7 @@ class MyRPGPlayer(Entity):
         self.invincibility_duration = 500
 
         self.health_recovery_rate = 0.001
-        self.energy_recovery_rate = 0.01
+        self.energy_recovery_rate = 0.005
 
     def get_status(self):
         if self.direction.x == 0 and self.direction.y == 0:

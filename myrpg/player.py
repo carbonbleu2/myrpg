@@ -57,8 +57,8 @@ class MyRPGPlayer(Entity):
         self.hurt_time = 0
         self.invincibility_duration = 500
 
-        self.health_recovery_rate = 0.0001
-        self.energy_recovery_rate = 0.001
+        self.health_recovery_rate = 0.001
+        self.energy_recovery_rate = 0.01
 
     def get_status(self):
         if self.direction.x == 0 and self.direction.y == 0:

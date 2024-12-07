@@ -28,7 +28,6 @@ class MyRPGPlayer(Entity):
         self.destroy_weapon = destroy_weapon
         self.weapon_index = 0
         self.weapon = WeaponFactory.get_weapon_by_index(self.weapon_index)
-        # self.weapon_entry = WEAPON_DATA[list(WEAPON_DATA.keys())[self.weapon_index]]
         self.can_switch_weapons = True
         self.weapon_switch_time = None
         self.switch_cooldown = 500
@@ -48,9 +47,14 @@ class MyRPGPlayer(Entity):
             'Intelligence': 4
         }
 
+        self.level = 1
+
         self.health = self.stats['MaxHealth']
         self.energy = self.stats['MaxEnergy']
-        self.xp = 123
+        self.total_xp = 0
+        
+
+
         self.speed = self.stats['Speed']
 
         self.vulnerable = True
@@ -153,8 +157,7 @@ class MyRPGPlayer(Entity):
                 if self.weapon_index >= WeaponFactory.get_weapon_count():
                     self.weapon_index = 0
                 self.weapon = WeaponFactory.get_weapon_by_index(self.weapon_index)
-                # self.weapon_entry = WEAPON_DATA[list(WEAPON_DATA.keys())[self.weapon_index]]
-
+                
             if keys[pygame.K_s] and self.can_switch_abilities:
                 self.can_switch_abilities = False
                 self.ability_switch_time = pygame.time.get_ticks()

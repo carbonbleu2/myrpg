@@ -3,7 +3,7 @@ import pygame
 
 from myrpg.animation_manager import ParticleAnimationManager
 from myrpg.abilities.ability_factory import AbilityFactory
-from myrpg.base_settings import TILE_SIZE, ENEMY_DATA, ENEMY_ID
+from myrpg.base_settings import TILE_SIZE, ENEMY_ID
 from myrpg.enemy import Enemy
 from myrpg.file_loader import FilesLoader
 from myrpg.tile import Tile

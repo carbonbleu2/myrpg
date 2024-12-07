@@ -10,7 +10,7 @@ class Sai(Weapon):
     damage = 8
     category = "smaller_weapons"
     codename = "Sai"
-    graphic = os.path.join("graphics", "smaller_weapons", "piercers", "Sai.png")
+    graphic = os.path.join("graphics", "weapons", "smaller_weapons", "Sai.png")
     pushback = 0.20
         
     def __init__(self, player, groups):

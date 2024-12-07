@@ -100,6 +100,9 @@ class Enemy(Entity):
     def enemy_update(self, player):
         self.get_status(player)
         self.actions(player)
+        if self.health <= 0:
+            player.gain_xp(self.exp_gain)
+            
         self.on_death()
 
     def animate(self):

@@ -32,7 +32,17 @@ class UI:
         pygame.draw.rect(self.display_surface, UI_BORDER_COLOUR, bg_rect, 3)
         text_rect = text_surface.get_rect(center = bg_rect.center)
         self.display_surface.blit(text_surface, text_rect)
-        
+
+    def show_level(self, level):
+        text_surface = self.font.render(str(int(level)), False, TEXT_COLOUR)
+        x = self.display_surface.get_size()[0] - 20
+        y = self.display_surface.get_size()[1] - 60
+        text_rect = text_surface.get_rect(bottomright=(x, y))
+
+        pygame.draw.rect(self.display_surface, UI_BG_COLOUR, text_rect.inflate(20, 20))
+        self.display_surface.blit(text_surface, text_rect)
+        pygame.draw.rect(self.display_surface, UI_BORDER_COLOUR, text_rect.inflate(20, 20), 3)
+   
 
     def show_xp(self, xp):
         text_surface = self.font.render(str(int(xp)), False, TEXT_COLOUR)
@@ -68,7 +78,8 @@ class UI:
     def display(self, player: MyRPGPlayer):
         self.show_bar(player.health, player.stats['MaxHealth'], self.health_bar, HEALTH_COLOUR)
         self.show_bar(player.energy, player.stats['MaxEnergy'], self.energy_bar, ENERGY_COLOUR)
-        self.show_xp(player.total_xp)
+        self.show_level(player.level)
+        self.show_xp(player.xp_for_next_level)
         self.show_weapon_overlay(player.weapon, not player.can_switch_weapons)
         self.show_ability_overlay(player.ability_entry, not player.can_switch_abilities)
         

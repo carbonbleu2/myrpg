@@ -52,7 +52,7 @@ class MyRPGPlayer(Entity):
         self.health = self.stats['MaxHealth']
         self.energy = self.stats['MaxEnergy']
         self.total_xp = 0
-        
+        self.xp_for_next_level = 15
 
 
         self.speed = self.stats['Speed']
@@ -97,7 +97,7 @@ class MyRPGPlayer(Entity):
             self.image.set_alpha(255)
 
     def get_player_assets(self):
-        character_path = 'graphics\\player'
+        character_path = os.path.join('graphics', 'player')
         self.animations = {
             'up': [],
             'down': [],
@@ -209,6 +209,21 @@ class MyRPGPlayer(Entity):
     def recover_health(self):
         if self.health < self.stats['MaxHealth']:
             self.health += self.health_recovery_rate * self.stats['Strength']
-        self.health = min(self.health, self.stats['MaxHealth'])        
+        self.health = min(self.health, self.stats['MaxHealth']) 
 
+    def gain_xp(self, exp_gain):
+        old_xp_for_level_gain = self.xp_for_next_level
+        self.total_xp += exp_gain
+        self.xp_for_next_level = self.xp_for_next_level - exp_gain
+        while self.xp_for_next_level <= 0:
+            self.level_up()
+            self.xp_for_next_level = old_xp_for_level_gain + 15 + self.xp_for_next_level
+
+    def level_up(self):
+        self.level += 1
+        self.stats['MaxHealth'] += 5
+        self.stats['MaxEnergy'] += 3
+        self.stats['Strength'] += 2
+        self.stats['Intelligence'] += 1
+        self.stats['Speed'] += 1
         

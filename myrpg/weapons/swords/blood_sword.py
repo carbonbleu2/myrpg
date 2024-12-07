@@ -12,7 +12,7 @@ class BloodSword(Weapon):
     codename = "BloodSword"
     graphic = os.path.join("graphics", "weapons", "swords", "BloodSword.png")
     pushback = 0.80
-    description = "Dark blade that drains life from vanquished foes."
+    description = "Dark blade that drains life when damaging foes."
         
     def __init__(self, player, groups):
         super().__init__(player, groups)

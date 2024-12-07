@@ -9,6 +9,7 @@ class FirstAid(BaseAbility):
         self.cost = 10
         self.category = 'support'
         self.codename = 'FirstAid'
+        self.description = "A basic healing spell to patch up small injuries"
         
         self.damage_range = 0
 

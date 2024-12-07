@@ -15,6 +15,7 @@ class Fireball(BaseAbility):
         self.cost = 15
         self.category = 'flame'
         self.codename = 'Fireball'
+        self.description = "A small burst of fire, great for novice mages"
 
         self.damage_range = 3
         

@@ -71,7 +71,7 @@ ENEMY_DATA = {
         "EnemyID": 0,
         "Name": "Blobble",
         "CodeName": "Blobble",
-        "MaxHealth": 100,
+        "MaxHealth": 30,
         "ExpGain": 50,
         "Damage": 20,
         "AttackType": "Bump",

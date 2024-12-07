@@ -78,7 +78,7 @@ class Level:
         self.ui.display(self.player)
 
     def create_attack(self):
-        self.current_attack = Weapon(self.player, [self.visible_sprites, self.attack_sprites])
+        self.current_attack = self.player.weapon(self.player, [self.visible_sprites, self.attack_sprites])
 
     def create_ability(self, ability, strength=None, cost=None):
         if strength is None:

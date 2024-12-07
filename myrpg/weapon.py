@@ -1,17 +1,20 @@
 import pygame
 
-from myrpg.player import MyRPGPlayer
-
 class Weapon(pygame.sprite.Sprite):
-    def __init__(self, player: MyRPGPlayer, groups):
+    name = None
+    cooldown = None
+    damage = None
+    category = None
+    codename = None
+    graphic = None
+    pushback = None
+
+    def __init__(self, player, groups):
         super().__init__(groups)
         self.sprite_type = 'weapon'
         player_dir = player.status.split('_')[0]
         
-        player_weapon = player.weapon_entry
-        player_weapon_name = player.weapon
-
-        weapon_graphic_path = f"graphics/weapons/{player_weapon['Category']}/animations/{player_weapon_name}_{player_dir}.png"
+        weapon_graphic_path = f"graphics/weapons/{self.category}/animations/{self.codename}_{player_dir}.png"
 
         self.image = pygame.image.load(weapon_graphic_path).convert_alpha()
 
@@ -23,3 +26,6 @@ class Weapon(pygame.sprite.Sprite):
             self.rect = self.image.get_rect(midbottom = player.rect.midtop)
         else:
             self.rect = self.image.get_rect(midtop = player.rect.midbottom)
+
+    def get_weapon_graphic_path(self, dir):
+        return f"graphics/weapons/{self.category}/animations/{self.codename}_{dir}.png"

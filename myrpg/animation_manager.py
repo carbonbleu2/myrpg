@@ -14,7 +14,12 @@ class ParticleAnimationManager:
                 'Blobble': None
             },
             'Ability': {
-                'Fireball': None,
+                'Fireball': {
+                    'left': None,
+                    'right': None,
+                    'up': None,
+                    'down': None
+                },
                 'FirstAid': None
             }
         }
@@ -25,7 +30,11 @@ class ParticleAnimationManager:
             for key in self.frames['EnemyDeath']:
                 self.frames['EnemyDeath'][key] = FilesLoader.import_images(os.path.join('graphics', 'particles', 'EnemyDeath', key))
             for key in self.frames['Ability']:
-                self.frames['Ability'][key] = FilesLoader.import_images(os.path.join('graphics', 'particles', 'Abilities', key))
+                if isinstance(self.frames['Ability'][key], dict):
+                    for dir in self.frames['Ability'][key]:
+                        self.frames['Ability'][key][dir] = FilesLoader.import_images(os.path.join('graphics', 'particles', 'Abilities', key, dir))
+                else:
+                    self.frames['Ability'][key] = FilesLoader.import_images(os.path.join('graphics', 'particles', 'Abilities', key))
 
     def reflect_images(self, frames):
         new_frames = []
@@ -42,6 +51,9 @@ class ParticleAnimationManager:
         frames = self.frames['EnemyDeath'][enemy_name]
         ParticleEffect(position, frames, groups)
 
-    def create_ability_particles(self, position, ability_name, groups):
-        frames = self.frames['Ability'][ability_name]
+    def create_ability_particles(self, position, ability_name, groups, direction=None):
+        if direction:
+            frames = self.frames['Ability'][ability_name][direction]
+        else:
+            frames = self.frames['Ability'][ability_name]
         ParticleEffect(position, frames, groups)

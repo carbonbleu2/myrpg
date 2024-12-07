@@ -51,7 +51,7 @@ class UI:
 
     def show_weapon_overlay(self, weapon_entry, has_switched_weapons):
         bg_rect = self.show_selection_box(10, 550, has_switched_weapons)
-        weapon_surface = self.weapon_surfaces[weapon_entry["CodeName"]]
+        weapon_surface = self.weapon_surfaces[weapon_entry.codename]
         weapon_rect = weapon_surface.get_rect(center=bg_rect.center)
         self.display_surface.blit(weapon_surface, weapon_rect)
 
@@ -65,6 +65,6 @@ class UI:
         self.show_bar(player.health, player.stats['MaxHealth'], self.health_bar, HEALTH_COLOUR)
         self.show_bar(player.energy, player.stats['MaxEnergy'], self.energy_bar, ENERGY_COLOUR)
         self.show_xp(player.xp)
-        self.show_weapon_overlay(player.weapon_entry, not player.can_switch_weapons)
+        self.show_weapon_overlay(player.weapon, not player.can_switch_weapons)
         self.show_ability_overlay(player.ability_entry, not player.can_switch_abilities)
         

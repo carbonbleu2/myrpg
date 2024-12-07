@@ -10,6 +10,8 @@ class FirstAid(BaseAbility):
         self.category = 'support'
         self.codename = 'FirstAid'
         
+        self.damage_range = 0
+
         self.graphic = f"{os.path.join('graphics', 'abilities', self.category, self.codename)}.png"
         
         self.applicable_groups = ['visible']

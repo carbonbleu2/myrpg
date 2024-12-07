@@ -6,6 +6,7 @@ from myrpg.abilities.ability_factory import AbilityFactory
 from myrpg.base_settings import *
 from myrpg.entity import Entity
 from myrpg.file_loader import FilesLoader
+from myrpg.weapons.weapon_factory import WeaponFactory
 
 class MyRPGPlayer(Entity):
     def __init__(self, pos, groups, obstacle_sprites, attack_func, destroy_weapon, create_ability):
@@ -26,8 +27,8 @@ class MyRPGPlayer(Entity):
         self.attack_func = attack_func
         self.destroy_weapon = destroy_weapon
         self.weapon_index = 0
-        self.weapon = list(WEAPON_DATA.keys())[self.weapon_index]
-        self.weapon_entry = WEAPON_DATA[list(WEAPON_DATA.keys())[self.weapon_index]]
+        self.weapon = WeaponFactory.get_weapon_by_index(self.weapon_index)
+        # self.weapon_entry = WEAPON_DATA[list(WEAPON_DATA.keys())[self.weapon_index]]
         self.can_switch_weapons = True
         self.weapon_switch_time = None
         self.switch_cooldown = 500
@@ -149,10 +150,10 @@ class MyRPGPlayer(Entity):
                 self.can_switch_weapons = False
                 self.weapon_switch_time = pygame.time.get_ticks()
                 self.weapon_index += 1
-                if self.weapon_index >= len(WEAPON_DATA.keys()):
+                if self.weapon_index >= WeaponFactory.get_weapon_count():
                     self.weapon_index = 0
-                self.weapon = list(WEAPON_DATA.keys())[self.weapon_index]
-                self.weapon_entry = WEAPON_DATA[list(WEAPON_DATA.keys())[self.weapon_index]]
+                self.weapon = WeaponFactory.get_weapon_by_index(self.weapon_index)
+                # self.weapon_entry = WEAPON_DATA[list(WEAPON_DATA.keys())[self.weapon_index]]
 
             if keys[pygame.K_s] and self.can_switch_abilities:
                 self.can_switch_abilities = False
@@ -175,7 +176,7 @@ class MyRPGPlayer(Entity):
     def cooldowns(self):
         current_time = pygame.time.get_ticks()
         if self.attacking:
-            if current_time - self.attack_timer >= self.attack_cooldown + self.weapon_entry['Cooldown']:
+            if current_time - self.attack_timer >= self.attack_cooldown + self.weapon.cooldown:
                 self.attacking = False
                 self.destroy_weapon()
 
@@ -191,8 +192,11 @@ class MyRPGPlayer(Entity):
             if current_time - self.hurt_time >= self.invincibility_duration:
                 self.vulnerable = True
 
-    def get_net_damage(self):
-        return self.stats['Strength'] + self.weapon_entry['Damage']
+    def get_net_weapon_damage(self):
+        return self.stats['Strength'] + self.weapon.damage
+    
+    def get_net_ability_damage(self):
+        return self.stats['Intelligence'] + self.ability_entry.strength
     
     def recover_energy(self):
         if self.energy < self.stats['MaxEnergy']:

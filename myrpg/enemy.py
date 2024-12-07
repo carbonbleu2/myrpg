@@ -43,8 +43,11 @@ class Enemy(Entity):
 
         self.trigger_death_particles = trigger_death_particles
 
+        self.temp_stats = {
+            'pushback': 0
+        }
+
     def import_graphics(self, name):
-        character_path = os.path.join('graphics', 'enemy_anim')
         self.animations = {
             'idle': [],
             'move': [],
@@ -97,7 +100,7 @@ class Enemy(Entity):
     def enemy_update(self, player):
         self.get_status(player)
         self.actions(player)
-        self.check_death()
+        self.on_death()
 
     def animate(self):
         self.frame_index += self.animation_speed
@@ -130,17 +133,18 @@ class Enemy(Entity):
         if self.vulnerable:
             _, self.direction = self.get_player_distance_and_direction(player)
             if damage_source == 'weapon':
-                self.health -= player.get_net_damage()
+                self.health -= player.get_net_weapon_damage()
+                self.temp_stats['pushback'] = player.weapon.pushback
             else:
-                pass
+                self.health -= player.get_net_ability_damage()
             self.vulnerable = False
             self.hit_time = pygame.time.get_ticks()
 
-    def check_death(self):
+    def on_death(self):
         if self.health <= 0:
             self.kill()
             self.trigger_death_particles(self.rect.center, self.name)
 
     def on_hit(self):
         if not self.vulnerable:
-            self.direction *= -self.resistance
+            self.direction *= -self.temp_stats['pushback']

@@ -1,11 +1,14 @@
-from myrpg.weapons.swords.recruits_sword import RecruitsSword
-from myrpg.weapons.piercers.wooden_lance import WoodenLance
-from myrpg.weapons.smaller_weapons.sai import Sai
+from myrpg.weapons.swords import *
+from myrpg.weapons.piercers import *
+from myrpg.weapons.smaller_weapons import *
 
 class WeaponFactory:
     WEAPONS = {
         'RecruitsSword': RecruitsSword,
+        'BloodSword': BloodSword,
+
         'WoodenLance': WoodenLance,
+        
         'Sai': Sai
     }
 

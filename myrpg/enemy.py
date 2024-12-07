@@ -138,6 +138,8 @@ class Enemy(Entity):
             if damage_source == 'weapon':
                 self.health -= player.get_net_weapon_damage()
                 self.temp_stats['pushback'] = player.weapon.pushback
+                if hasattr(player.weapon, 'on_hit'):
+                    player.weapon.on_hit(player, player.get_net_weapon_damage())
             else:
                 self.health -= player.get_net_ability_damage()
             self.vulnerable = False

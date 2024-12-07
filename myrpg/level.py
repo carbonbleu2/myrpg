@@ -112,6 +112,7 @@ class Level:
                             target.kill()
                         else:
                             target.get_damage(self.player, attack_sprite.sprite_type)
+                            
 
     def damage_player(self, amount, attack_type):
         if self.player.vulnerable:

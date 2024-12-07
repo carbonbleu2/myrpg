@@ -1,0 +1,1 @@
+from myrpg.weapons.piercers.wooden_lance import *

@@ -12,6 +12,7 @@ class Sai(Weapon):
     codename = "Sai"
     graphic = os.path.join("graphics", "weapons", "smaller_weapons", "Sai.png")
     pushback = 0.20
-        
+    description = "Three pronged weapon, perfect for swift and precise strikes."
+
     def __init__(self, player, groups):
         super().__init__(player, groups)

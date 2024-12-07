@@ -12,6 +12,7 @@ class WoodenLance(Weapon):
     codename = "WoodenLance"
     graphic = os.path.join("graphics", "weapons", "piercers", "WoodenLance.png")
     pushback = 0.50
+    description = "Simple wooden spear, sturdy enough for beginner thrusts."
         
     def __init__(self, player, groups):
         super().__init__(player, groups)

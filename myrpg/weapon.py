@@ -8,6 +8,7 @@ class Weapon(pygame.sprite.Sprite):
     codename = None
     graphic = None
     pushback = None
+    description = None
 
     def __init__(self, player, groups):
         super().__init__(groups)

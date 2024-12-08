@@ -27,7 +27,6 @@ class WarriorsResolve(BaseAbility):
 
     def on_cast(self, player, groups, **kwargs):
         def end_of_ability(player, defense):
-            # print("Old defense")
             player.defense = defense
 
         from myrpg.level import Level    

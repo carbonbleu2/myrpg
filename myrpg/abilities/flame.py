@@ -38,5 +38,4 @@ class Fireball(BaseAbility):
                 direction = pygame.math.Vector2(0, -1)
             else:
                 direction = pygame.math.Vector2(0, 1)
-            print(player.rect.center)
             projectile = self.animation_manager.create_projectile(player.rect.center, 'Fireball', self.proj_velocity, groups, player_dir, self.damage_range)

@@ -18,6 +18,5 @@ class Projectile(ParticleEffect):
         if self.range is not None:
             current_pos = pygame.math.Vector2(self.rect.center)
             dist = (current_pos - start_pos).magnitude()
-            print(start_pos, current_pos, dist)
             if dist >= self.range:
                 self.kill()

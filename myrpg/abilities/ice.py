@@ -7,18 +7,19 @@ from myrpg.abilities.base_ability import BaseAbility
 from myrpg.animation_manager import ParticleAnimationManager
 from myrpg.base_settings import TILE_SIZE
 
-class FireballAbility(BaseAbility):
+class FrostAbility(BaseAbility):
     def __init__(self, animation_manager):
         super().__init__(animation_manager)
-        self.name = 'Fireball'
-        self.strength = 20
+        self.name = 'Frost'
+        self.strength = 18
         self.cost = 15
-        self.category = 'flame'
-        self.codename = 'Fireball'
-        self.description = "A small burst of fire, great for novice mages"
+        self.category = 'ice'
+        self.codename = 'Frost'
+        self.damaging = True
+        self.description = "A small, quick burst of ice"
 
         self.damage_range = 100
-        self.damaging = True
+        
         self.graphic = f"{os.path.join('graphics', 'abilities', self.category, self.codename)}.png"
 
         self.applicable_groups = ['visible', 'attack']

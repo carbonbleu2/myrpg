@@ -97,7 +97,8 @@ class Level:
             if group_name == 'visible':
                 groups.append(self.visible_sprites)
             elif group_name == 'attack':
-                groups.append(self.attack_sprites)
+                if ability.damaging:
+                    groups.append(self.attack_sprites)
 
         ability.on_cast(self.player, groups)
 

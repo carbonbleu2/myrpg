@@ -21,7 +21,8 @@ class ParticleAnimationManager:
                     'up': None,
                     'down': None
                 },
-                'FirstAid': None
+                'FirstAid': None,
+                'WarriorsResolve': None
             }
         }
 
@@ -36,6 +37,7 @@ class ParticleAnimationManager:
                         self.frames['Ability'][key][dir] = FilesLoader.import_images(os.path.join('graphics', 'particles', 'Abilities', key, dir))
                 else:
                     self.frames['Ability'][key] = FilesLoader.import_images(os.path.join('graphics', 'particles', 'Abilities', key))
+        
 
     def reflect_images(self, frames):
         new_frames = []
@@ -52,12 +54,15 @@ class ParticleAnimationManager:
         frames = self.frames['EnemyDeath'][enemy_name]
         ParticleEffect(position, frames, groups)
 
-    def create_ability_particles(self, position, ability_name, groups, direction=None):
+    def create_ability_particles(self, position, ability_name, groups, direction=None, 
+                                 cycle=False, 
+                                 stick_to_player=False,
+                                 player=None):
         if direction:
             frames = self.frames['Ability'][ability_name][direction]
         else:
             frames = self.frames['Ability'][ability_name]
-        ParticleEffect(position, frames, groups)
+        return ParticleEffect(position, frames, groups, cycle=cycle, stick_to_player=stick_to_player, player=player)
     
     def create_projectile(self, position, projectile_name, velocity, groups, direction, range=None):
         frames = self.frames['Ability'][projectile_name][direction]

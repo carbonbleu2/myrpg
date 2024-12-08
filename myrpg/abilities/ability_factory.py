@@ -1,17 +1,18 @@
-from myrpg.abilities.flame import *
-from myrpg.abilities.support import *
-from myrpg.abilities.warrior import *
+from myrpg.abilities import *
 
 class AbilityFactory:
     ABILITIES = {
         # Flame abilities
-        'Fireball': Fireball(None),
+        'Fireball': FireballAbility(None),
 
         # Support abilities
-        'FirstAid': FirstAid(None),
+        'FirstAid': FirstAidAbility(None),
 
         # Warrior abilities:
-        'WarriorsResolve': WarriorsResolve(None)
+        'WarriorsResolve': WarriorsResolveAbility(None),
+
+        # Ice abilities
+        'Frost': FrostAbility(None)
     }
 
     @staticmethod

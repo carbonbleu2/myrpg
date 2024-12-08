@@ -152,7 +152,10 @@ class MyRPGPlayer(Entity):
             if keys[pygame.K_x]:
                 self.attacking = True
                 self.attack_timer = pygame.time.get_ticks()
-                net_ability_damage = self.ability_entry.strength + self.stats['Intelligence']
+                if self.ability_entry.damaging:
+                    net_ability_damage = self.ability_entry.strength + self.stats['Intelligence']
+                else:
+                    net_ability_damage = 0
                 self.create_ability(self.ability_entry, net_ability_damage, self.ability_entry.cost)
 
             if keys[pygame.K_a] and self.can_switch_weapons:
@@ -204,6 +207,8 @@ class MyRPGPlayer(Entity):
         return self.attack + self.weapon.damage
     
     def get_net_ability_damage(self):
+        if not self.ability_entry.damaging:
+            return 0
         return self.special_attack + self.ability_entry.strength
     
     def recover_energy(self):

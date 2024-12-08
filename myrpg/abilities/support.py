@@ -1,7 +1,7 @@
 import os
 from myrpg.abilities.base_ability import BaseAbility
 
-class FirstAid(BaseAbility):
+class FirstAidAbility(BaseAbility):
     def __init__(self, animation_manager):
         super().__init__(animation_manager)
         self.name = 'First Aid'
@@ -10,7 +10,7 @@ class FirstAid(BaseAbility):
         self.category = 'support'
         self.codename = 'FirstAid'
         self.description = "A basic healing spell to patch up small injuries"
-        
+        self.damaging = False
         self.damage_range = 0
 
         self.graphic = f"{os.path.join('graphics', 'abilities', self.category, self.codename)}.png"
@@ -18,7 +18,7 @@ class FirstAid(BaseAbility):
         self.applicable_groups = ['visible']
 
     def on_cast(self, player, groups, **kwargs):
-        super(FirstAid, self).on_cast(player, groups, **kwargs)
+        super(FirstAidAbility, self).on_cast(player, groups, **kwargs)
         if player.energy >= self.cost and player.health < player.stats['MaxHealth']:
             player.health += self.strength
             player.energy -= self.cost

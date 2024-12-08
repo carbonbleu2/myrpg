@@ -55,7 +55,10 @@ class MyRPGPlayer(Entity):
         self.total_xp = 0
         self.xp_for_next_level = 15
 
+        self.attack = int(math.ceil(0.8 * self.stats['Strength']))
         self.defense = int(math.ceil(0.2 * self.stats['Strength']))
+
+        self.special_attack = int(math.ceil(0.8 * self.stats['Intelligence']))
 
         self.speed = self.stats['Speed']
 
@@ -198,10 +201,10 @@ class MyRPGPlayer(Entity):
                 self.vulnerable = True
 
     def get_net_weapon_damage(self):
-        return self.stats['Strength'] + self.weapon.damage
+        return self.attack + self.weapon.damage
     
     def get_net_ability_damage(self):
-        return self.stats['Intelligence'] + self.ability_entry.strength
+        return self.special_attack + self.ability_entry.strength
     
     def recover_energy(self):
         if self.energy < self.stats['MaxEnergy']:
@@ -226,6 +229,6 @@ class MyRPGPlayer(Entity):
         self.stats['MaxHealth'] += 5
         self.stats['MaxEnergy'] += 3
         self.stats['Strength'] += 2
-        self.stats['Intelligence'] += 1
-        self.stats['Speed'] += 1
+        self.stats['Intelligence'] += 2
+        self.stats['Speed'] += 2
         

@@ -4,6 +4,7 @@ import pygame
 
 from myrpg.file_loader import FilesLoader
 from myrpg.particles import ParticleEffect
+from myrpg.projectile import Projectile
 
 class ParticleAnimationManager:
     def __init__(self):
@@ -57,3 +58,15 @@ class ParticleAnimationManager:
         else:
             frames = self.frames['Ability'][ability_name]
         ParticleEffect(position, frames, groups)
+    
+    def create_projectile(self, position, projectile_name, velocity, groups, direction, range=None):
+        frames = self.frames['Ability'][projectile_name][direction]
+        if direction == 'right':
+            velocity = pygame.math.Vector2(1, 0) * velocity
+        elif direction == 'left':
+            velocity = pygame.math.Vector2(-1, 0) * velocity
+        elif direction == 'up':
+            velocity = pygame.math.Vector2(0, -1) * velocity
+        else:
+            velocity = pygame.math.Vector2(0, 1) * velocity
+        return Projectile(position, frames, velocity, groups, range)

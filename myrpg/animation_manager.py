@@ -21,8 +21,14 @@ class ParticleAnimationManager:
                     'up': None,
                     'down': None
                 },
+                'Frost': {
+                    'left': None,
+                    'right': None,
+                    'up': None,
+                    'down': None
+                },
                 'FirstAid': None,
-                'WarriorsResolve': None
+                'WarriorsResolve': None,
             }
         }
 

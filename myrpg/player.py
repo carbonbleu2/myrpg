@@ -14,7 +14,7 @@ class MyRPGPlayer(Entity):
         super().__init__(groups)
         self.image = pygame.image.load(os.path.join('graphics', 'player', 'player_down.png')).convert_alpha()
         self.rect = self.image.get_rect(topleft=pos)
-        self.hitbox = self.rect
+        self.hitbox = self.rect.inflate(-5, 0)
 
         self.get_player_assets()
 

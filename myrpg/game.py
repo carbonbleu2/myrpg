@@ -11,7 +11,7 @@ class MyRPG:
         self.screen = pygame.display.set_mode((GAME_WIDTH, GAME_HEIGHT))
         pygame.display.set_caption("MyRPG")
         self.clock = pygame.time.Clock()
-        self.level = Level()
+        self.level = Level('Dungeon1')
 
     def run(self):
         while True:
@@ -24,7 +24,7 @@ class MyRPG:
                         self.level = Level()
 
 
-            self.screen.fill("grey")
+            self.screen.fill("black")
             self.level.run()
             pygame.display.update()
             self.clock.tick(FPS)

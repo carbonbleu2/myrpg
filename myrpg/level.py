@@ -15,10 +15,10 @@ from myrpg.weapon import Weapon
 class Level:
     timers = {}
 
-    def __init__(self):
+    def __init__(self, map_name):
         self.display_surface = pygame.display.get_surface()
-
-        self.visible_sprites = YSortCameraGroup()
+        self.map_name = map_name
+        self.visible_sprites = YSortCameraGroup(map_name)
         self.obstacle_sprites = pygame.sprite.Group()
 
         self.attack_sprites = pygame.sprite.Group()
@@ -33,12 +33,13 @@ class Level:
         self.animation_manager = ParticleAnimationManager()
         AbilityFactory.set_animation_manager(self.animation_manager)
 
+        self.move_to_next = False
+
     def create_map(self):
         layouts = {
-            'boundary': CSVUtils.import_map('maps\\Map1._FloorBlocks.csv'),
-            'grass': CSVUtils.import_map('maps\\Map1._Grass.csv'),
-            'object': CSVUtils.import_map('maps\\Map1._Objects.csv'),
-            'entity': CSVUtils.import_map('maps\\Map1._Entities.csv')
+            'boundary': CSVUtils.import_map(f'maps\\{self.map_name}._FloorBlocks.csv'),
+            'object': CSVUtils.import_map(f'maps\\{self.map_name}._Objects.csv'),
+            'entity': CSVUtils.import_map(f'maps\\{self.map_name}._Entities.csv'),
         }
 
         graphics = {
@@ -63,8 +64,8 @@ class Level:
                             surface = graphics['objects'][int(col)]
                             Tile((x, y), [self.visible_sprites, self.obstacle_sprites], 'object', surface)
                         if style == 'entity':
-                            if col == '8':
-                                self.player = MyRPGPlayer((736, 800), [self.visible_sprites], 
+                            if col == '1':
+                                self.player = MyRPGPlayer((x, y), [self.visible_sprites], 
                                     self.obstacle_sprites, 
                                     self.create_attack, self.destroy_weapon,
                                     self.create_ability)
@@ -133,14 +134,14 @@ class Level:
         self.animation_manager.create_enemy_death_particles(position, enemy_name, self.visible_sprites)
 
 class YSortCameraGroup(pygame.sprite.Group):
-    def __init__(self):
+    def __init__(self, map_name):
         super().__init__()
         self.surface = pygame.display.get_surface()
         self.half_width = self.surface.get_size()[0] // 2
         self.half_height = self.surface.get_size()[1] // 2
         self.offset = pygame.math.Vector2()
 
-        self.floor = pygame.image.load('maps\\Map1.png').convert()
+        self.floor = pygame.image.load(f'maps\\{map_name}.png').convert()
         self.floor_rect = self.floor.get_rect(topleft=(0, 0))
 
     def custom_draw(self, player):
